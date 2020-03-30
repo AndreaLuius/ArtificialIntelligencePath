@@ -4,28 +4,30 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 [SelectionBase]
+[RequireComponent(typeof(WayPoint))]
 public class CubeControl : MonoBehaviour
 {
-
-    [SerializeField][Range(0,10)] float cubeSize = 0;
     private TextMesh label;
+    private WayPoint waypoint;  
 
     public void Start()
     {
-        label = FindObjectOfType<TextMesh>();
+        waypoint = GetComponent<WayPoint>();
+        label = GetComponentInChildren<TextMesh>();
     }
 
-    private void cubeDistanze()
-    {
-        float xPos = Mathf.Round(transform.position.x / cubeSize) * cubeSize;
-        float zPos = Mathf.Round(transform.position.z / cubeSize) * cubeSize;
-
-        label.text = $"{xPos},{zPos}";
-        transform.position = new Vector3(xPos, 0f, zPos);
-    }
-    
     void Update()
     {
        cubeDistanze();
+    }
+
+
+    private void cubeDistanze()
+    {
+        string text = $"{waypoint.cubeSizer().x},{waypoint.cubeSizer().y}";
+        label.text = text;
+        gameObject.name = text;
+        transform.position =
+            new Vector3(waypoint.cubeSizer().x, 0f, waypoint.cubeSizer().y);
     }
 }
