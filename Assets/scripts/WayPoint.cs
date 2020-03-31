@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WayPoint : MonoBehaviour
 {
-    const int cubeSize = 1;
+    public const int cubeSize = 2;
     public bool isExplored = false;
     public WayPoint exploredFrom;
 

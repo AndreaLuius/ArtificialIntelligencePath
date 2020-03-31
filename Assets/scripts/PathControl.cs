@@ -43,6 +43,7 @@ public class PathControl : MonoBehaviour
     private void breadhAlgorithm()
     {
         queue.Enqueue(startWaypoint);
+
         while (queue.Count > 0 && isRunning)
         {
             searchElement = queue.Dequeue();
@@ -56,8 +57,6 @@ public class PathControl : MonoBehaviour
     {
         if(searchElement == endWayPoint)
         {
-            endWayPoint.transform.Find("top")
-                .GetComponent<MeshRenderer>().material.color = Color.red;
             isRunning = false;
         }
     }
@@ -70,11 +69,10 @@ public class PathControl : MonoBehaviour
         {
             try
             {
-                Vector2Int explorer = searchElement.cubeSizer() + index;
-                mapPath[explorer].transform.Find("top")
-                .GetComponent<MeshRenderer>().material.color = Color.green;
+                Vector2Int explorer = searchElement.cubeSizer() / WayPoint.cubeSize + index;
                 enqueingPathPosition(explorer);
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 print($"{ex.StackTrace}");
             }
@@ -103,16 +101,25 @@ public class PathControl : MonoBehaviour
 
         foreach (var way in wayPoints)
         {
-            mapPath.Add(way.cubeSizer(), way);
+            Vector2Int explore = way.cubeSizer() / WayPoint.cubeSize;
+            if (!mapPath.ContainsKey(explore))
+            {
+                mapPath.Add(way.cubeSizer() / WayPoint.cubeSize, way);
+            }
         }
     }
 
     public List<WayPoint> loadBreadth()
     {
-        mapData();
-        breadhAlgorithm();
-        createPath();
-        return wayPointList;
+        if(wayPointList.Count == 0)
+        {
+            mapData();
+            breadhAlgorithm();
+            createPath();
+            return wayPointList;
+        }
+        else
+            return wayPointList;
     }
     #endregion
 }
